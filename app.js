@@ -7,12 +7,16 @@ import expressLayouts from "express-ejs-layouts";
 import session from "express-session";
 
 const app = express();
+
 dotenv.config();
+
 connectDB();
 
 app.use(expressLayouts);
 app.set("view engine", "ejs");
+
 app.use(express.urlencoded({ extended: false }));
+
 app.use(
 	session({
 		secret: "secret",
@@ -20,9 +24,12 @@ app.use(
 		saveUninitialized: false,
 	})
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(flash());
+
 app.use((req, res, next) => {
 	res.locals.success_msg = req.flash("success_msg");
 	res.locals.error_msg = req.flash("error_msg");

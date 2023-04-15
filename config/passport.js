@@ -45,7 +45,7 @@ passport.use(
 			};
 
 			try {
-				let user = await GoogleUser.findOne({ googleId: profile.id });
+				const user = await GoogleUser.findOne({ googleId: profile.id });
 
 				if (user) {
 					done(null, user);
@@ -75,7 +75,7 @@ passport.use(
 				username: profile.username,
 			};
 			try {
-				let user = await GitHubUser.findOne({ githubId: profile.id });
+				const user = await GitHubUser.findOne({ githubId: profile.id });
 				if (user) {
 					done(null, user);
 				} else {
@@ -107,7 +107,7 @@ passport.use(
 			};
 
 			try {
-				let user = await TwitterUser.findOne({ twitterId: profile.id });
+				const user = await TwitterUser.findOne({ twitterId: profile.id });
 
 				if (user) {
 					done(null, user);
