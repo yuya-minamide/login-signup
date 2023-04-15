@@ -47,7 +47,27 @@ const GoogleUserSchema = new Schema({
 	},
 });
 
+const GithubSchema = new Schema({
+	githubId: {
+		type: String,
+		required: true,
+	},
+	displayName: {
+		type: String,
+		required: true,
+	},
+	username: {
+		type: String,
+		required: true,
+	},
+	createdAt: {
+		type: Date,
+		default: Date.now,
+	},
+});
+
 const User = model("User", UserSchema);
 const GoogleUser = model("GoogleUser", GoogleUserSchema);
+const GitHubUser = model("GitHubUser", GithubSchema);
 
-export { User, GoogleUser };
+export { User, GoogleUser, GitHubUser };
