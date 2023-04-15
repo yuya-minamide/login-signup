@@ -1,23 +1,14 @@
-const express = require("express");
-const expressLayouts = require("express-ejs-layouts");
-const mongoose = require("mongoose");
-const passport = require("passport");
-const flash = require("connect-flash");
-const session = require("express-session");
+import express from "express";
+import expressLayouts from "express-ejs-layouts";
+import flash from "connect-flash";
+import session from "express-session";
+import { connectDB } from "./config/db.js";
+import dotenv from "dotenv";
+import { passport } from "./config/passport.js";
 
 const app = express();
-
-// Passport Config
-require("./config/passport")(passport);
-
-// DB Config
-const db = require("./config/db").mongoURI;
-
-// Connect to MongoDB
-mongoose
-	.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
-	.then(() => console.log("MongoDB Connected"))
-	.catch((err) => console.log(err));
+dotenv.config();
+connectDB();
 
 app.use(expressLayouts);
 app.set("view engine", "ejs");
@@ -39,9 +30,14 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use("/", require("./routes/index.js"));
-app.use("/users", require("./routes/users.js"));
+(async () => {
+	const indexRouter = (await import("./routes/index.js")).router;
+	const usersRouter = (await import("./routes/users.js")).router;
 
-const PORT = process.env.PORT || 3000;
+	app.use("/", indexRouter);
+	app.use("/users", usersRouter);
 
-app.listen(PORT, console.log(`Server running on ${PORT}`));
+	const PORT = process.env.PORT || 3000;
+
+	app.listen(PORT, console.log(`Server running on  ${PORT}`));
+})();

@@ -1,15 +1,11 @@
-const express = require("express");
-const router = express.Router();
-const { ensureAuthenticated } = require("../middleware/auth");
+import { Router } from "express";
+import { ensureAuthenticated } from "../middleware/auth.js";
 
-// Welcome Page
+export const router = Router();
+
 router.get("/", (req, res) => res.render("top"));
-
-// Dashboard
 router.get("/home", ensureAuthenticated, (req, res) =>
 	res.render("home", {
-		name: req.user.name,
+		name: req.user.name ? req.user.name : req.user.displayName,
 	})
 );
-
-module.exports = router;

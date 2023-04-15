@@ -1,9 +1,13 @@
-const express = require("express");
-const router = express.Router();
-const bcrypt = require("bcryptjs");
-const passport = require("passport");
-const User = require("../models/User");
-const { forwardAuthenticated } = require("../middleware/auth");
+import { Router } from "express";
+import bcrypt from "bcryptjs";
+import passport from "passport";
+import { User } from "../models/User.js";
+import { forwardAuthenticated } from "../middleware/auth.js";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+export const router = Router();
 
 router.get("/login", forwardAuthenticated, (req, res) => res.render("login"));
 router.get("/signup", forwardAuthenticated, (req, res) => res.render("signup"));
@@ -74,5 +78,3 @@ router.get("/logout", (req, res) => {
 		res.redirect("/users/login");
 	});
 });
-
-module.exports = router;
