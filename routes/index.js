@@ -7,7 +7,7 @@ router.get("/", (req, res) => res.render("top"));
 // Dashboard
 router.get("/home", (req, res) =>
 	res.render("home", {
-		user: req.user,
+		name: req.user.name,
 	})
 );
 
