@@ -90,3 +90,9 @@ router.get("/github", passport.authenticate("github", { scope: ["user:email"] })
 router.get("/github/callback", passport.authenticate("github", { failureRedirect: "/login" }), (req, res) => {
 	res.redirect("/home");
 });
+
+// Twitter Logout Handle
+router.get("/twitter", passport.authenticate("twitter"));
+router.get("/twitter/callback", passport.authenticate("twitter", { failureRedirect: "/login" }), (req, res) => {
+	res.redirect("/home");
+});

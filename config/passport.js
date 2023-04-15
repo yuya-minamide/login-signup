@@ -2,8 +2,9 @@ import passport from "passport";
 import LocalStrategy from "passport-local";
 import GoogleStrategy from "passport-google-oauth20";
 import GitHubStrategy from "passport-github2";
+import TwitterStrategy from "passport-twitter";
 import bcrypt from "bcryptjs";
-import { User, GoogleUser, GitHubUser } from "../models/User.js";
+import { User, GoogleUser, GitHubUser, TwitterUser } from "../models/User.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -88,13 +89,50 @@ passport.use(
 	)
 );
 
+// Twitter authentication
+passport.use(
+	new TwitterStrategy(
+		{
+			consumerKey: process.env.TWITTER_CONSUMER_KEY,
+			consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+			callbackURL: "/users/twitter/callback",
+			includeEmail: true,
+		},
+		async (token, tokenSecret, profile, done) => {
+			const newUser = {
+				twitterId: profile.id,
+				displayName: profile.displayName,
+				username: profile.username,
+				email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null,
+			};
+
+			try {
+				let user = await TwitterUser.findOne({ twitterId: profile.id });
+
+				if (user) {
+					done(null, user);
+				} else {
+					user = await TwitterUser.create(newUser);
+					done(null, user);
+				}
+			} catch (err) {
+				console.error(err);
+			}
+		}
+	)
+);
+
 passport.serializeUser((user, done) => {
 	done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
 	try {
-		const user = (await User.findById(id)) || (await GoogleUser.findById(id)) || (await GitHubUser.findById(id));
+		const user =
+			(await User.findById(id)) ||
+			(await GoogleUser.findById(id)) ||
+			(await GitHubUser.findById(id)) ||
+			(await TwitterUser.findById(id));
 
 		done(null, user);
 	} catch (err) {

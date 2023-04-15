@@ -66,8 +66,34 @@ const GithubSchema = new Schema({
 	},
 });
 
+const TwitterUserSchema = new Schema({
+	twitterId: {
+		type: String,
+		required: true,
+	},
+	displayName: {
+		type: String,
+		required: true,
+	},
+	username: {
+		type: String,
+		required: true,
+	},
+	email: {
+		type: String,
+	},
+	image: {
+		type: String,
+	},
+	createdAt: {
+		type: Date,
+		default: Date.now,
+	},
+});
+
 const User = model("User", UserSchema);
 const GoogleUser = model("GoogleUser", GoogleUserSchema);
 const GitHubUser = model("GitHubUser", GithubSchema);
+const TwitterUser = model("TwitterUser", TwitterUserSchema);
 
-export { User, GoogleUser, GitHubUser };
+export { User, GoogleUser, GitHubUser, TwitterUser };
