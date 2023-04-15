@@ -1,9 +1,9 @@
-import { Router } from "express";
 import bcrypt from "bcryptjs";
-import passport from "passport";
+import dotenv from "dotenv";
+import { Router } from "express";
 import { User } from "../models/User.js";
 import { forwardAuthenticated } from "../middleware/auth.js";
-import dotenv from "dotenv";
+import passport from "passport";
 
 dotenv.config();
 

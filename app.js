@@ -1,10 +1,10 @@
+import { connectDB } from "./config/db.js";
+import { passport } from "./config/passport.js";
+import flash from "connect-flash";
+import dotenv from "dotenv";
 import express from "express";
 import expressLayouts from "express-ejs-layouts";
-import flash from "connect-flash";
 import session from "express-session";
-import { connectDB } from "./config/db.js";
-import dotenv from "dotenv";
-import { passport } from "./config/passport.js";
 
 const app = express();
 dotenv.config();

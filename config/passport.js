@@ -1,11 +1,11 @@
-import passport from "passport";
-import LocalStrategy from "passport-local";
-import GoogleStrategy from "passport-google-oauth20";
-import GitHubStrategy from "passport-github2";
-import TwitterStrategy from "passport-twitter";
 import bcrypt from "bcryptjs";
-import { User, GoogleUser, GitHubUser, TwitterUser } from "../models/User.js";
 import dotenv from "dotenv";
+import { GitHubUser, GoogleUser, TwitterUser, User } from "../models/User.js";
+import passport from "passport";
+import GitHubStrategy from "passport-github2";
+import GoogleStrategy from "passport-google-oauth20";
+import LocalStrategy from "passport-local";
+import TwitterStrategy from "passport-twitter";
 dotenv.config();
 
 // Local authentication
