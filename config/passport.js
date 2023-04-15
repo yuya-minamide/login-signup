@@ -1,7 +1,8 @@
 import passport from "passport";
 import LocalStrategy from "passport-local";
+import GoogleStrategy from "passport-google-oauth20";
 import bcrypt from "bcryptjs";
-import { User } from "../models/User.js";
+import { User, GoogleUser } from "../models/User.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -24,13 +25,47 @@ passport.use(
 	})
 );
 
+// Google authentication
+passport.use(
+	new GoogleStrategy(
+		{
+			clientID: process.env.GOOGLE_CLIENT_ID,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+			callbackURL: "/users/google/callback",
+		},
+		async (accessToken, refreshToken, profile, done) => {
+			const newUser = {
+				googleId: profile.id,
+				displayName: profile.displayName,
+				firstName: profile.name.givenName,
+				lastName: profile.name.familyName,
+				image: profile.photos[0].value,
+			};
+
+			try {
+				let user = await GoogleUser.findOne({ googleId: profile.id });
+
+				if (user) {
+					done(null, user);
+				} else {
+					user = await GoogleUser.create(newUser);
+					done(null, user);
+				}
+			} catch (err) {
+				console.error(err);
+			}
+		}
+	)
+);
+
 passport.serializeUser((user, done) => {
 	done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
 	try {
-		const user = await User.findById(id);
+		const user = (await User.findById(id)) || (await GoogleUser.findById(id));
+
 		done(null, user);
 	} catch (err) {
 		done(err, null);
